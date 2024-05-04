@@ -12,7 +12,12 @@
           "package_name": "com.example.tp3veilletechnologique"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "910404667823-7dpa3cln7n680gojkq1k624ttstt5omo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDPM0Yuu1Q95-Z1oeV2_9LmBI8tS-84WKE"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "910404667823-7dpa3cln7n680gojkq1k624ttstt5omo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
