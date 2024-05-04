@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "910404667823",
+    "project_id": "tp3veilletechnologique",
+    "storage_bucket": "tp3veilletechnologique.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:910404667823:android:2d173af7770f555e75c75a",
+        "android_client_info": {
+          "package_name": "com.example.tp3veilletechnologique"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPM0Yuu1Q95-Z1oeV2_9LmBI8tS-84WKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
