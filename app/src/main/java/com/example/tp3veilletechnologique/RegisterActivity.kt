@@ -8,26 +8,35 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.Toast
+import androidx.compose.material3.AlertDialog
+import com.example.tp3veilletechnologique.databinding.LoginLayoutBinding
+import com.example.tp3veilletechnologique.databinding.RegisterLayoutBinding
 
 class RegisterActivity: AppCompatActivity() {
+    private lateinit var binding: RegisterLayoutBinding
     val firebaseAuth = FirebaseAuth.getInstance()
-    lateinit var username : EditText
-    lateinit var password : EditText
-    lateinit var passwordCheck : EditText
-    lateinit var register : Button
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.register_layout)
-        register = findViewById(R.id.register)
-        username = findViewById(R.id.username)
-        password = findViewById(R.id.password)
-        passwordCheck = findViewById(R.id.passwordCheck)
+        binding = RegisterLayoutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        register.setOnClickListener{
-            val email = username.toString().trim()
-            val passwordString = password.toString()
-            registerUser(email, passwordString)
+        binding.register.setOnClickListener{
+            val email = binding.username.text.toString()
+            val passwordString = binding.password.text.toString()
+            val passwordCheck = binding.passwordCheck.text.toString()
+
+            if(email.isNotEmpty() && passwordCheck.isNotEmpty() && passwordString.isNotEmpty()) {
+                if (passwordString == passwordCheck) {
+                    registerUser(email, passwordString)
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Les mots de passes ne sont pas identiques",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
     }
 
@@ -37,6 +46,7 @@ class RegisterActivity: AppCompatActivity() {
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
                 } else {
                     val errorMessage = task.exception?.message.toString()
                 }

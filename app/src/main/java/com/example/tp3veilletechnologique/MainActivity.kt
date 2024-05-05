@@ -1,46 +1,55 @@
 package com.example.tp3veilletechnologique
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
 import android.view.View
 import android.webkit.WebView.FindListener
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.tp3veilletechnologique.databinding.LoginLayoutBinding
 import com.google.firebase.auth.FirebaseAuth
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: LoginLayoutBinding
     val firebaseAuth = FirebaseAuth.getInstance()
-    lateinit var username : EditText
-    lateinit var password : EditText
-    lateinit var connexion : Button
-    lateinit var register : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_layout)
-        connexion = findViewById(R.id.connexion)
-        username = findViewById(R.id.username)
-        password = findViewById(R.id.password)
 
-        connexion.setOnClickListener{
-            val email = username.toString().trim()
-            val motDePasse = password.toString()
-            signInUser(email, motDePasse)
+        binding = LoginLayoutBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
+
+        binding.connexion.setOnClickListener{
+            val email = binding.username.text.toString()
+            val motDePasse = binding.password.text.toString()
+
+            if(email.isNotEmpty() && motDePasse.isNotEmpty()) {
+                signInUser(email, motDePasse)
+            }else{
+                Toast.makeText(this, "Veillez entrer une addresse courriel et un mot de passe", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        register =findViewById(R.id.inscrire)
-        register.setOnClickListener{
-            setContentView(R.layout.register_layout)
+        val register = Intent(this@MainActivity, RegisterActivity::class.java)
+
+        binding.inscrire.setOnClickListener{
+            startActivity(register)
         }
     }
 
     private fun signInUser(email: String, password: String){
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
             task -> if(task.isSuccessful){
+            Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+
         }
         else {
+            Toast.makeText(this, "Login not successful", Toast.LENGTH_SHORT).show()
             if(task.exception?.message.toString().contains("FirebaseAuthUserNotFoundException")){
-                setContentView(R.layout.register_layout)
+                Toast.makeText(this, "Login not successful", Toast.LENGTH_SHORT).show()
             }
         }
         }
