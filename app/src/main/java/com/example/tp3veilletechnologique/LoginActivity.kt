@@ -42,18 +42,19 @@ class LoginActivity : AppCompatActivity() {
 
     private fun signInUser(email: String, password: String){
         val maps = Intent(this@LoginActivity, MapsActivity::class.java)
+        binding.connexion.isEnabled = false
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
                 task -> if(task.isSuccessful){
                     startActivity(maps)
                     finish()
             Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
-
         }
         else {
             Toast.makeText(this, "Login not successful", Toast.LENGTH_SHORT).show()
             if(task.exception?.message.toString().contains("FirebaseAuthUserNotFoundException")){
                 Toast.makeText(this, "Login not successful", Toast.LENGTH_SHORT).show()
             }
+            binding.connexion.isEnabled = true
         }
         }
     }
