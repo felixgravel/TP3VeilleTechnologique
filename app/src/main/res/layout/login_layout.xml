@@ -43,7 +43,8 @@
                 android:background="@drawable/custom_edittext"
                 android:layout_marginTop="40dp"
                 android:padding="8dp"
-                android:hint="Nom d'utilisateur"
+                android:autofillHints="emailAddress"
+                android:hint="Adresse Courriel"
                 android:textColor="@color/black"
                 android:drawablePadding="8dp"/>
 
@@ -55,10 +56,17 @@
                 android:layout_marginTop="20dp"
                 android:inputType="textPassword"
                 android:padding="8dp"
+                android:autofillHints="password"
                 android:hint="Mot de passe"
                 android:textColor="@color/black"
                 android:drawablePadding="8dp"/>
 
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/remember"
+                android:text="Rester connecter"
+                android:buttonTint="@color/pumpkin"/>
             <Button
                 android:id="@+id/connexion"
                 android:layout_width="match_parent"
@@ -67,10 +75,12 @@
                 android:textColor="@color/platinum"
                 android:textStyle="bold"
                 android:textSize="18sp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="0dp"
                 android:backgroundTint="@color/pumpkin"
                 app:strokeColor = "@color/black"
                 app:cornerRadius = "20dp"/>
+
+
 
             <TextView
                 android:layout_width="150dp"
@@ -86,7 +96,7 @@
 
             <Button
                 android:id="@+id/inscrire"
-                android:layout_width="170dp"
+                android:layout_width="151dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/blue"
                 android:text="S'inscrire"

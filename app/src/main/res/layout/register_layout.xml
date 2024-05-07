@@ -32,7 +32,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="S'enregistrer"
+                    android:text="S'inscrire"
                     android:id="@+id/textConnection"
                     android:textSize="36sp"
                     android:textAlignment="center"
