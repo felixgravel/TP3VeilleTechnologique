@@ -22,6 +22,20 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        val sharedPreferences = getSharedPreferences("LOGIN", MODE_PRIVATE)
+
+        if(sharedPreferences.contains("EMAIL")){
+            val userEmail = sharedPreferences.getString("EMAIL", "")
+            val password = sharedPreferences.getString("MDP", "")
+
+
+            if (userEmail != null) {
+                if (password != null) {
+                    signInUser(userEmail, password)
+                }
+            }
+        }
+
         binding.connexion.setOnClickListener{
             val email = binding.username.text.toString()
             val motDePasse = binding.password.text.toString()
@@ -45,6 +59,14 @@ class LoginActivity : AppCompatActivity() {
         binding.connexion.isEnabled = false
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
                 task -> if(task.isSuccessful){
+                    if(binding.remember.isChecked){
+                        val sharedPreferences = getSharedPreferences("LOGIN", MODE_PRIVATE)
+                        with(sharedPreferences.edit()){
+                            putString("EMAIL", email)
+                            putString("MDP", password)
+                            apply()
+                        }
+                    }
                     startActivity(maps)
                     finish()
             Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
