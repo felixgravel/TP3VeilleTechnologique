@@ -57,6 +57,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation ("com.google.maps.android:android-maps-utils:3.8.0")
     implementation ("com.google.maps.android:maps-utils-ktx:5.0.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha13")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

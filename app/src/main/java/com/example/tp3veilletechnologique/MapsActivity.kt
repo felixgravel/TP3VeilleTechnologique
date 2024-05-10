@@ -3,6 +3,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -69,6 +70,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         }
+
+        addKML()
+    }
+
+    private fun addKML(){
+        val structRecLayer = KmlLayer(mMap, R.raw.structrec, this)
+        val pistesCyclable = KmlLayer(mMap, R.raw.pistes, this)
+
+        pistesCyclable.addLayerToMap()
+        structRecLayer.addLayerToMap()
     }
 
     private fun getLastLocation() {
@@ -87,7 +98,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .addOnSuccessListener { location ->
                 if (location != null) {
                     val currentLatLng = LatLng(location.latitude, location.longitude)
-                    mMap.addMarker(MarkerOptions().position(currentLatLng).title("Your Location"))
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
                 }
             }

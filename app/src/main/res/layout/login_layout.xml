@@ -45,6 +45,7 @@
                 android:padding="8dp"
                 android:autofillHints="emailAddress"
                 android:hint="Adresse Courriel"
+                android:textColorHint="@color/black"
                 android:textColor="@color/black"
                 android:drawablePadding="8dp"/>
 
@@ -58,6 +59,7 @@
                 android:padding="8dp"
                 android:autofillHints="password"
                 android:hint="Mot de passe"
+                android:textColorHint="@color/black"
                 android:textColor="@color/black"
                 android:drawablePadding="8dp"/>
 
