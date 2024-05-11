@@ -1,7 +1,9 @@
 package com.example.tp3veilletechnologique
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -11,10 +13,12 @@ import android.widget.Toast
 import androidx.compose.material3.AlertDialog
 import com.example.tp3veilletechnologique.databinding.LoginLayoutBinding
 import com.example.tp3veilletechnologique.databinding.RegisterLayoutBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity: AppCompatActivity() {
     private lateinit var binding: RegisterLayoutBinding
     val firebaseAuth = FirebaseAuth.getInstance()
+    val firebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -44,6 +48,14 @@ class RegisterActivity: AppCompatActivity() {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    val userId = firebaseAuth.currentUser!!.uid;
+                    var documentReference = firebaseFirestore.collection("users").document(userId)
+                    var userMap = hashMapOf<String, String>()
+                    userMap.put("Id", userId)
+                    userMap.put("Email", email)
+                    documentReference.set(userMap).addOnSuccessListener {
+                        Log.d(TAG, "Registration successful for user: " + userId)
+                    }
                     Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
