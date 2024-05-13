@@ -11,9 +11,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tp3veilletechnologique.databinding.LoginLayoutBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: LoginLayoutBinding
     val firebaseAuth = FirebaseAuth.getInstance()
+    val firebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
