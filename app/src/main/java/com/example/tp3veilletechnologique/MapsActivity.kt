@@ -3,7 +3,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -16,7 +15,6 @@ import com.example.tp3veilletechnologique.databinding.ActivityMapsBinding
 import com.example.tp3veilletechnologique.parsers.ParseCSV
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.maps.android.data.kml.KmlLayer
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -72,17 +70,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         }
+
         addCustomPins()
         addKML()
     }
 
     private fun addCustomPins(){
-        val parsedModule = ParseCSV().ParseParks()
-        for(module in parsedModule){
-            val markerOpts = MarkerOptions()
-                .position(LatLng(module.latitude, module.longitude))
-                .title(module.name)
-            mMap.addMarker(markerOpts)
+        ParseCSV.parseParks(resources.openRawResource(R.raw.structrec))
+
+        val parcs = ParseCSV.ListParks()
+
+        for (park in parcs) {
+            val marker = MarkerOptions()
+                .position(LatLng(park.latitude, park.longitude))
+                .title(park.name)
+            mMap.addMarker(marker)
         }
     }
     private fun addKML(){

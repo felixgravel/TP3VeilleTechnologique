@@ -1,28 +1,40 @@
 package com.example.tp3veilletechnologique.parsers
 
-import android.util.Log
-import java.io.File
-class ParseCSV {
-    data class Module(val id: String, val name: String, val longitude: Double, val latitude: Double, val location: String){}
-    val filePath = "sampledata/structrec.csv"
-    public fun ParseParks(): List<Module> {
-        val file = File(filePath)
-        if(file.exists()){
-            return emptyList();
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
+
+object ParseCSV {
+    data class Parc(val id: String, val name: String, val longitude: Double, val latitude: Double, val location: String){}
+    private var parks: MutableList<Parc> = mutableListOf()
+    private fun parseParkLine(line: String): Parc? {
+        val parts = line.split('|')
+        if (parts.size < 6) return null
+
+        val id = parts[0]
+        val name = parts[1]
+        val location = parts[2]
+        val longitude = parts[4].toDoubleOrNull() ?: 0.0
+        val latitude = parts[5].toDoubleOrNull() ?: 0.0
+
+        return Parc(id, name, longitude, latitude, location)
+    }
+
+    fun parseParks(filePath: InputStream) {
+        val reader = BufferedReader(InputStreamReader(filePath))
+        var index = 0
+        for (record in reader.lineSequence()) {
+            if (index > 0) {
+                val park = parseParkLine(record)
+                if (park != null) {
+                    parks.add(park)
+                }
+            }
+            index++
         }
-        val csvData = file.readText();
-        val modules = csvData.lines().drop(1).map { line ->
-            val parts = line.split("|")
-            if (parts.size < 6) return@map null
-            Module(
-                id = parts[0],
-                name = parts[1],
-                location = parts[2],
-                longitude = parts[4].toDouble(),
-                latitude = parts[5].toDouble()
-                )
-        }.filterNotNull()
-//        Log.d(TAG, "")
-        return modules;
+    }
+
+    fun ListParks(): List<Parc> {
+        return parks.toList()
     }
 }
