@@ -34,8 +34,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val firebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var parksRecyclerView: RecyclerView
-    private lateinit var parksRecyclerViewAdapter: ParksRecyclerViewAdapter
-    private lateinit var bottomSheet: LinearLayout
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
     companion object {

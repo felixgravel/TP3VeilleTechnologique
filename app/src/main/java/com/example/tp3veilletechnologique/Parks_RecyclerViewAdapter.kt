@@ -29,6 +29,7 @@ class ParksRecyclerViewAdapter(private val parks: List<ParseCSV.Parc>,
         holder.parkInfoButton.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, ParkInfoActivity::class.java)
+            intent.putExtra("parkId", park.id)
             intent.putExtra("parkName", park.name)
             intent.putExtra("parkLocation", park.location)
             intent.putExtra("parkLatitude", park.latitude)

@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.tp3veilletechnologique.databinding.ActivitySettingsBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+    private val auth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -18,6 +20,10 @@ class SettingsActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        val currentUser = auth.currentUser
+        currentUser?.email.let {email ->
+            binding.nomUtilisateur.text = email
+        }
         val sharedPreferences = getSharedPreferences("KML", MODE_PRIVATE)
 
         if(sharedPreferences.contains("ADDKML")){
