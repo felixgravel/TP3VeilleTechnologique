@@ -21,71 +21,71 @@ android:layout_height="match_parent">
 
 </FrameLayout>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/bottom_sheet"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/blue"
-    app:behavior_peekHeight="100dp"
-    app:layout_behavior="@string/bottom_sheet_behavior">
-
-    <LinearLayout
-        android:id="@+id/card_container"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/blue"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:behavior_peekHeight="80dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
-        <RelativeLayout
-            android:id="@+id/buttonContainer"
+        <LinearLayout
+            android:id="@+id/card_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:visibility="visible">
+            android:layout_height="match_parent"
+            android:background="@color/blue"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-            <ImageButton
-                android:id="@+id/settingButton"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/settings_button" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/buttonContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Favoris"
-                android:textSize="20dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="25dp"
-                android:layout_marginEnd="90dp"
-                android:textColor="@color/platinum"/>
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:visibility="visible">
 
-            <Switch
-                android:id="@+id/favorisSwitch"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="40dp"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:thumbTint="@color/pumpkin"
-                android:trackTint="@color/pumpkin"
-                tools:ignore="UseSwitchCompatOrMaterialXml"
-                android:visibility="visible"/>
+                <ImageButton
+                    android:id="@+id/settingButton"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/settings_button" />
 
-        </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Favoris"
+                    android:textSize="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="90dp"
+                    android:textColor="@color/platinum"/>
+
+                <Switch
+                    android:id="@+id/favorisSwitch"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="40dp"
+                    android:scaleX="2"
+                    android:scaleY="2"
+                    android:thumbTint="@color/pumpkin"
+                    android:trackTint="@color/pumpkin"
+                    tools:ignore="UseSwitchCompatOrMaterialXml"
+                    android:visibility="visible"/>
+
+            </RelativeLayout>
 
 
 
 
-    </LinearLayout>
+        </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

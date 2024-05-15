@@ -1,8 +1,11 @@
 package com.example.tp3veilletechnologique
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -15,6 +18,8 @@ import com.example.tp3veilletechnologique.databinding.ActivityMapsBinding
 import com.example.tp3veilletechnologique.parsers.ParseCSV
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.Marker
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.data.kml.KmlLayer
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -27,6 +32,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,9 +44,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        binding.settingButton.setOnClickListener{
+            val settings = Intent(this, SettingsActivity::class.java)
+            startActivity(settings)
+        }
     }
 
 
+    @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -72,7 +84,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         addCustomPins()
-        addKML()
+
+        val sharedPreferences = getSharedPreferences("KML", MODE_PRIVATE)
+
+        if(sharedPreferences.contains("KML")){
+            val isKML = sharedPreferences.getBoolean("ADDKML", false)
+            if(isKML){
+                addKML()
+            }
+        }
+    }
+
+    private fun expand(){
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
     }
 
     private fun addCustomPins(){
@@ -87,7 +113,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.addMarker(marker)
         }
     }
-    private fun addKML(){
+    fun addKML(){
         val pistesCyclable = KmlLayer(mMap, R.raw.pistes, this)
         pistesCyclable.addLayerToMap()
     }
