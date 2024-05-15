@@ -64,6 +64,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ParkInfoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TP3VeilleTechnologique" />
     </application>
 
 </manifest>

@@ -6,8 +6,11 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.LinearLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -18,15 +21,22 @@ import com.example.tp3veilletechnologique.databinding.ActivityMapsBinding
 import com.example.tp3veilletechnologique.parsers.ParseCSV
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
+import com.google.android.gms.maps.model.Marker
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.maps.android.data.kml.KmlLayer
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val firebaseFirestore = FirebaseFirestore.getInstance()
+    private lateinit var parksRecyclerView: RecyclerView
+    private lateinit var parksRecyclerViewAdapter: ParksRecyclerViewAdapter
+    private lateinit var bottomSheet: LinearLayout
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -50,8 +60,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val settings = Intent(this, SettingsActivity::class.java)
             startActivity(settings)
         }
-    }
 
+        setupRecyclerView()
+        loadParks()
+    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -83,8 +95,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         }
         mMap.uiSettings.isZoomControlsEnabled = true;
+        mMap.setOnMarkerClickListener(this)
         addCustomPins()
-        addKML()
+//        addKML()
     }
 
     private fun addCustomPins(){
@@ -103,6 +116,47 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val pistesCyclable = KmlLayer(mMap, R.raw.pistes, this)
         pistesCyclable.addLayerToMap()
     }
+
+    private fun setupRecyclerView() {
+        parksRecyclerView = findViewById(R.id.mRecyclerView)
+        parksRecyclerView.layoutManager = LinearLayoutManager(this)
+    }
+
+//    private fun loadParks() {
+//        ParseCSV.parseParks(resources.openRawResource(R.raw.structrec))
+//        val parcs = ParseCSV.ListParks()
+//        Log.d(TAG, "Number of parks: ${parcs.size}")
+//        val parksAdapter = ParksRecyclerViewAdapter(parcs) { parc: ParseCSV.Parc -> }
+//        parksRecyclerView.adapter = parksAdapter
+//    }
+
+    private fun loadParks(clickedPark: ParseCSV.Parc? = null) {
+        ParseCSV.parseParks(resources.openRawResource(R.raw.structrec))
+
+        val parcs = ParseCSV.ListParks()
+
+        Log.d(TAG, "Number of parks: ${parcs.size}")
+
+        // Create a new list to store the modified order of parks
+        val modifiedParcs = mutableListOf<ParseCSV.Parc>()
+
+        // Add the clicked park at the top if it is not null
+        clickedPark?.let {
+            if (!parcs.contains(clickedPark)) {
+                modifiedParcs.add(clickedPark)
+            }
+        }
+
+        // Add all other parks to the list
+        modifiedParcs.addAll(parcs)
+
+        // Update RecyclerView with the modified parks list
+        val parksAdapter = ParksRecyclerViewAdapter(modifiedParcs) { parc: ParseCSV.Parc -> }
+        parksRecyclerView.adapter = parksAdapter
+        parksAdapter.notifyDataSetChanged()
+    }
+
+
 
     private fun getLastLocation() {
         // Get last known location
@@ -165,6 +219,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
+
+//    override fun onMarkerClick(p0: Marker): Boolean {
+//        if(p0.title != null){
+//            bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+//            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+//            return false
+//        }
+//        return true
+//    }
+override fun onMarkerClick(p0: Marker): Boolean {
+    if (p0.title != null) {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        // Find the clicked park from the list
+        val clickedPark = ParseCSV.ListParks().find { it.name == p0.title }
+        // Load parks with the clicked park at the top
+        loadParks(clickedPark)
+        return false
+    }
+    return true
+}
+
 }
 
 
