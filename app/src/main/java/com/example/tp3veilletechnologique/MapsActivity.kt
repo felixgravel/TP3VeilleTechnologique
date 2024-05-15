@@ -24,6 +24,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.maps.android.data.kml.KmlLayer
 
@@ -33,8 +34,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val firebaseFirestore = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
     private lateinit var parksRecyclerView: RecyclerView
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
+    private var showFavoritesOnly: Boolean = false
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -94,10 +97,38 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
         }
         mMap.uiSettings.isZoomControlsEnabled = true;
         mMap.setOnMarkerClickListener(this)
+//        binding.favorisSwitch.setOnCheckedChangeListener{
+//            _, isChecked -> showFavoritesOnly = isChecked
+//            refreshMap()
+//        }
         addCustomPins()
-//        addKML()
     }
 
+//    private fun refreshMap(){
+//        mMap.clear()
+//        if(showFavoritesOnly){
+//            chargerFavoris()
+//        }else{
+//            addCustomPins()
+//        }
+//    }
+
+//    private fun chargerFavoris(){
+//        val courriel = auth.currentUser?.email
+//        if(courriel != null){
+//            firebaseFirestore.collection("favorites")
+//                .whereEqualTo("userEmail", courriel)
+//                .get()
+//                .addOnSuccessListener { documents ->
+//                    val favoriteParkIds = documents.map { it.getString("parkId") }
+//                    val parks = ParseCSV.ListParks().filter { favoriteParkIds.contains(it.id) }
+//                    addParksToMap(parks)
+//                }
+//                .addOnFailureListener { exception ->
+//                    Log.w(TAG, "Error getting favorite parks", exception)
+//                }
+//        }
+//    }
     private fun addCustomPins(){
         ParseCSV.parseParks(resources.openRawResource(R.raw.structrec))
 

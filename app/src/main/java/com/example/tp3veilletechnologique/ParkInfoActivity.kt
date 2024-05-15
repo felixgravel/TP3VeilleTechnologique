@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.tp3veilletechnologique.parsers.ParseCSV
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.type.Date
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ParkInfoActivity: AppCompatActivity() {
     private val firebaseFirestore = FirebaseFirestore.getInstance()
@@ -53,10 +56,17 @@ private fun addComment(parkId: String, comment: String){
         val userEmail = firebaseUser.email
         userEmail?.let { email ->
             val commentairesCollection = firebaseFirestore.collection("commentaires")
+            val timestamp = System.currentTimeMillis()
+
+            val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+            val formattedDate = sdf.format(java.util.Date(timestamp))
+
             val commentData = hashMapOf(
                 "parkId" to parkId,
                 "userEmail" to email,
-                "comment" to comment
+                "comment" to comment,
+                "date" to formattedDate
+
             )
             commentairesCollection.add(commentData)
                 .addOnSuccessListener {
