@@ -37,7 +37,7 @@ object ParseCSV {
 
 
 
-    fun ListParks(): List<Parc> {
-        return parks.toList()
+    fun ListParks(): MutableList<Parc> {
+        return parks
     }
 }

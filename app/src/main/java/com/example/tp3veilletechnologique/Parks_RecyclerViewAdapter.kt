@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tp3veilletechnologique.parsers.ParseCSV
 
-class ParksRecyclerViewAdapter(private val parks: List<ParseCSV.Parc>,
+class ParksRecyclerViewAdapter(private val parks: MutableList<ParseCSV.Parc>,
                                 private val onFavoriteClick: (ParseCSV.Parc) -> Unit
 ) : RecyclerView.Adapter<ParksRecyclerViewAdapter.ParkViewHolder>() {
 
@@ -38,6 +38,16 @@ class ParksRecyclerViewAdapter(private val parks: List<ParseCSV.Parc>,
             intent.putExtra("parkLongitude", park.longitude)
             context.startActivity(intent)
         }
+    }
+
+    fun clear() {
+        parks.clear()
+        notifyDataSetChanged()
+    }
+
+    fun addAll(newParks: MutableList<ParseCSV.Parc>) {
+        parks.addAll(newParks)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -37,9 +38,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
     private val auth = FirebaseAuth.getInstance()
     private lateinit var parksRecyclerView: RecyclerView
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
-    private var showFavoritesOnly: Boolean = false
-    private lateinit var listParks : List<ParseCSV.Parc>
-
+    private lateinit var listParks : MutableList<ParseCSV.Parc>
+    private val parkNameToIndexMap: HashMap<String, Int> = HashMap()
+    private val mainMapState = mutableListOf<ParseCSV.Parc>()
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
@@ -65,6 +66,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
 
         setupRecyclerView()
         loadParks()
+
+        for (i in listParks.indices) {
+            parkNameToIndexMap[listParks[i].name] = i
+        }
+
+        val userEmail = auth.currentUser?.email
+
+        binding.favorisSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                loadUserFavoriteParks(userEmail)
+            } else {
+                revertToMainMapState()
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -98,38 +113,80 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
         }
         mMap.uiSettings.isZoomControlsEnabled = true;
         mMap.setOnMarkerClickListener(this)
-//        binding.favorisSwitch.setOnCheckedChangeListener{
-//            _, isChecked -> showFavoritesOnly = isChecked
-//            refreshMap()
-//        }
+
         addCustomPins()
     }
 
-//    private fun refreshMap(){
-//        mMap.clear()
-//        if(showFavoritesOnly){
-//            chargerFavoris()
-//        }else{
-//            addCustomPins()
-//        }
-//    }
 
-//    private fun chargerFavoris(){
-//        val courriel = auth.currentUser?.email
-//        if(courriel != null){
-//            firebaseFirestore.collection("favorites")
-//                .whereEqualTo("userEmail", courriel)
-//                .get()
-//                .addOnSuccessListener { documents ->
-//                    val favoriteParkIds = documents.map { it.getString("parkId") }
-//                    val parks = ParseCSV.ListParks().filter { favoriteParkIds.contains(it.id) }
-//                    addParksToMap(parks)
-//                }
-//                .addOnFailureListener { exception ->
-//                    Log.w(TAG, "Error getting favorite parks", exception)
-//                }
-//        }
-//    }
+    private fun saveMainMapState() {
+        mainMapState.clear()
+        mainMapState.addAll(listParks)
+    }
+
+    private fun revertToMainMapState() {
+
+        mMap.clear()
+
+        for (park in mainMapState) {
+            val marker = MarkerOptions()
+                .position(LatLng(park.latitude, park.longitude))
+                .title(park.name)
+            mMap.addMarker(marker)
+        }
+
+        parksAdapter.clear()
+//        loadParks()
+        parksAdapter.addAll(mainMapState)
+        parksAdapter.notifyDataSetChanged()
+    }
+    private fun getUserFavorites(userEmail: String?, onSuccess: (List<String>) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+        val favoritesCollection = db.collection("favorites")
+
+        favoritesCollection.whereEqualTo("userEmail", userEmail)
+            .get()
+            .addOnSuccessListener { documents ->
+                val favoriteParkIds = mutableListOf<String>()
+                for (document in documents) {
+
+                    val parkId = document.getString("parkId")
+                    if (parkId != null) {
+                        favoriteParkIds.add(parkId)
+                    }
+                }
+                onSuccess(favoriteParkIds)
+            }
+    }
+
+    private fun loadUserFavoriteParks(userEmail: String?) {
+
+        saveMainMapState()
+
+        getUserFavorites(userEmail,
+            onSuccess = { favoriteParkIds ->
+
+                val favoriteParks = mutableListOf<ParseCSV.Parc>()
+                for (parkId in favoriteParkIds) {
+                    val park = listParks.find { it.id == parkId }
+                    park?.let {
+                        favoriteParks.add(it)
+                    }
+                }
+
+                parksAdapter.clear()
+                parksAdapter.addAll(favoriteParks)
+
+                mMap.clear()
+
+                for (park in favoriteParks) {
+                    val marker = MarkerOptions()
+                        .position(LatLng(park.latitude, park.longitude))
+                        .title(park.name)
+                    mMap.addMarker(marker)
+                }
+            }
+        )
+    }
     private fun addCustomPins(){
         ParseCSV.parseParks(resources.openRawResource(R.raw.structrec))
 
@@ -152,42 +209,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
         parksRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
-//    private fun loadParks() {
-//        ParseCSV.parseParks(resources.openRawResource(R.raw.structrec))
-//        val parcs = ParseCSV.ListParks()
-//        Log.d(TAG, "Number of parks: ${parcs.size}")
-//        val parksAdapter = ParksRecyclerViewAdapter(parcs) { parc: ParseCSV.Parc -> }
-//        parksRecyclerView.adapter = parksAdapter
-//    }
+
+    private lateinit var parksAdapter: ParksRecyclerViewAdapter
 
     private fun loadParks(clickedPark: ParseCSV.Parc? = null) {
         ParseCSV.parseParks(resources.openRawResource(R.raw.structrec))
+        listParks = ParseCSV.ListParks()
 
-        val parcs = ParseCSV.ListParks()
+        Log.d(TAG, "Number of parks: ${listParks.size}")
 
-        Log.d(TAG, "Number of parks: ${parcs.size}")
-
-        // Create a new list to store the modified order of parks
-        val modifiedParcs = mutableListOf<ParseCSV.Parc>()
-
-        // Add the clicked park at the top if it is not null
-        clickedPark?.let {
-            if (!parcs.contains(clickedPark)) {
-                modifiedParcs.add(clickedPark)
-            }
+        if (!::parksAdapter.isInitialized) {
+            parksAdapter = ParksRecyclerViewAdapter(listParks) { parc: ParseCSV.Parc -> }
+            parksRecyclerView.adapter = parksAdapter
         }
-
-        // Add all other parks to the list
-        modifiedParcs.addAll(parcs)
-
-        // Update RecyclerView with the modified parks list
-        val parksAdapter = ParksRecyclerViewAdapter(modifiedParcs) { parc: ParseCSV.Parc -> }
-        parksRecyclerView.adapter = parksAdapter
-
-        parksAdapter.notifyDataSetChanged()
     }
-
-
 
     private fun getLastLocation() {
         // Get last known location
@@ -251,23 +286,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
         }
     }
 
-//    override fun onMarkerClick(p0: Marker): Boolean {
-//        if(p0.title != null){
-//            bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-//            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-//            return false
-//        }
-//        return true
-//    }
 override fun onMarkerClick(p0: Marker): Boolean {
     if (p0.title != null) {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
         // Find the clicked park from the list
         val clickedPark = ParseCSV.ListParks().find { it.name == p0.title }
         // Load parks with the clicked park at the top
-        loadParks(clickedPark)
+        if (clickedPark != null) {
+            binding.clickedview.visibility = View.VISIBLE
+            binding.parkName.text = clickedPark.name
+            binding.parkInfoButton.setOnClickListener {
+                val context = it.context
+                val intent = Intent(context, ParkInfoActivity::class.java)
+                intent.putExtra("parkId", clickedPark.id)
+                intent.putExtra("parkName", clickedPark.name)
+                intent.putExtra("parkLocation", clickedPark.location)
+                intent.putExtra("parkLatitude", clickedPark.latitude)
+                intent.putExtra("parkLongitude", clickedPark.longitude)
+                context.startActivity(intent)
+            }
+        }
         return false
     }
     return true
