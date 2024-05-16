@@ -14,6 +14,8 @@ import com.example.tp3veilletechnologique.parsers.ParseCSV
 class ParksRecyclerViewAdapter(private val parks: List<ParseCSV.Parc>,
                                 private val onFavoriteClick: (ParseCSV.Parc) -> Unit
 ) : RecyclerView.Adapter<ParksRecyclerViewAdapter.ParkViewHolder>() {
+
+
     class ParkViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val parkNameTextView: TextView = view.findViewById(R.id.parkName)
         val parkInfoButton: Button = view.findViewById(R.id.parkInfoButton)

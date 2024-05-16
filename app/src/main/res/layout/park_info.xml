@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/platinum"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/ParkName"
@@ -14,6 +16,8 @@
         android:layout_marginEnd="172dp"
         android:layout_marginBottom="35dp"
         android:text="ParkName"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/Location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +31,8 @@
         android:layout_marginEnd="172dp"
         android:layout_marginBottom="48dp"
         android:text="Location"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/Latitude"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -38,6 +44,8 @@
         android:layout_marginStart="85dp"
         android:layout_marginTop="157dp"
         android:text="Latitude"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,6 +56,8 @@
         android:layout_marginTop="157dp"
         android:layout_marginEnd="85dp"
         android:text="Longitude"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -57,11 +67,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="124dp"
         android:layout_marginEnd="124dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="56dp"
         android:text="Ajouter au favoris"
         app:layout_constraintBottom_toTopOf="@+id/CommenterButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -70,7 +79,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="369dp"
+        android:layout_marginBottom="472dp"
+        android:background="@color/pumpkin"
+        android:backgroundTint="@color/pumpkin"
         android:text="Commenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,20 +89,36 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
+
         android:id="@+id/CommenterText"
         android:layout_width="195dp"
         android:layout_height="80dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="352dp"
-        android:background="@color/purple_500"
-        android:textColor="@color/pumpkin"
+        android:layout_marginBottom="460dp"
+        android:background="@drawable/custom_comment_edittext"
         android:ems="10"
-        android:gravity="start|top"
         android:inputType="textMultiLine"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/CommenterButton"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/FavorisButton"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CommenterText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

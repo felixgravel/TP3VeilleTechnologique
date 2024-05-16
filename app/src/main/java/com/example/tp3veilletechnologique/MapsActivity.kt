@@ -38,6 +38,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
     private lateinit var parksRecyclerView: RecyclerView
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
     private var showFavoritesOnly: Boolean = false
+    private lateinit var listParks : List<ParseCSV.Parc>
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -182,6 +183,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerClickListe
         // Update RecyclerView with the modified parks list
         val parksAdapter = ParksRecyclerViewAdapter(modifiedParcs) { parc: ParseCSV.Parc -> }
         parksRecyclerView.adapter = parksAdapter
+
         parksAdapter.notifyDataSetChanged()
     }
 
@@ -269,6 +271,11 @@ override fun onMarkerClick(p0: Marker): Boolean {
         return false
     }
     return true
+}
+
+private fun loadFavoris()  {
+
+
 }
 
 }
