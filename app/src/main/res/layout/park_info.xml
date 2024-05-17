@@ -29,11 +29,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="172dp"
         android:layout_marginEnd="172dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="80dp"
         android:text="Location"
         android:textColor="@color/black"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/Latitude"
+        app:layout_constraintBottom_toTopOf="@+id/FavorisButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -63,15 +63,16 @@
 
     <Button
         android:id="@+id/FavorisButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="156dp"
+        android:layout_height="55dp"
         android:layout_marginStart="124dp"
+        android:layout_marginTop="190dp"
         android:layout_marginEnd="124dp"
-        android:layout_marginBottom="56dp"
         android:text="Ajouter au favoris"
-        app:layout_constraintBottom_toTopOf="@+id/CommenterButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/CommenterButton"
@@ -79,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="472dp"
+        android:layout_marginBottom="400dp"
         android:background="@color/pumpkin"
         android:backgroundTint="@color/pumpkin"
         android:text="Commenter"
@@ -88,14 +89,15 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <EditText
 
         android:id="@+id/CommenterText"
         android:layout_width="195dp"
         android:layout_height="80dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="460dp"
+        android:layout_marginBottom="400dp"
         android:background="@drawable/custom_comment_edittext"
         android:ems="10"
         android:inputType="textMultiLine"
@@ -107,13 +109,11 @@
         app:layout_constraintTop_toBottomOf="@+id/FavorisButton"
         app:layout_constraintVertical_bias="1.0" />
 
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="152dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
